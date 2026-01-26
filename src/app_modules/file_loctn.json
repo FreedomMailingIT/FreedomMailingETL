@@ -1,0 +1,15 @@
+{
+    "_comment": "environ value used in app_modules/file_locations.py",
+    "_comment1": "users: data_directory",
+
+    "data_root": "{ROOT}/{DATA_DIR}/",
+    "archive": "{ROOT}/{DATA_DIR}/archive/",
+    "data": "{ROOT}/{DATA_DIR}/data/",
+    "original_data": "{ROOT}/{DATA_DIR}/original_data/",
+    "production_data": "{ROOT}/{DATA_DIR}/production_data/",
+
+    "tests": "{ROOT}/{PROJECT}/tests/data/",
+
+    "operations": "{ROOT}/Dropbox/FreedomMailing/",
+    "default": "{ROOT}/{DATA_DIR}/production_data/"
+}
