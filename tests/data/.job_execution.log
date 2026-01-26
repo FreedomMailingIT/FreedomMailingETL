@@ -1,0 +1,42 @@
+[I 260126 14:03:18 test_hlap:19] Calling: py src/transforms/hlap_cnvrt.py -f "_hlap Jan 25 CYCLE 2.TXT"
+[I 260126 14:24:38 test_hlap:19] Calling: py src/transforms/hlap_cnvrt.py -f "_hlap Jan 25 CYCLE 2.TXT"
+[I 260126 14:25:21 test_hlap:19] Calling: py src/transforms/hlap_cnvrt.py -f "/home/gjb/projects/FreedomMailingELT/tests/data/hlap Jan 25 CYCLE 2.TXT"
+[I 260126 14:27:01 test_hlap:19] Calling: py src/transforms/hlap_cnvrt.py -f "/home/gjb/projects/FreedomMailingELT/tests/data/hlap Jan 25 CYCLE 2.TXT"
+[I 260126 14:27:38 test_hlap:19] Calling: py src/transforms/hlap_cnvrt.py -f "/home/gjb/projects/FreedomMailingELT/tests/data/hlap Jan 25 CYCLE 2.TXT"
+[I 260126 14:27:38 hlap_cnvrt:86] Could not find file "/home/gjb/projects/FreedomMailingELT/tests/data/home/gjb/projects/FreedomMailingELT/tests/data/hlap Jan 25 CYCLE 2.TXT"
+[I 260126 14:31:08 test_hlap:19] Calling: py src/transforms/hlap_cnvrt.py -f "hlap Jan 25 CYCLE 2.TXT"
+[I 260126 14:31:08 hlap_cnvrt:65] Created "fxd hlap Jan 25 CYCLE 2_PRN.TXT"
+[I 260126 14:31:08 hlap_cnvrt:66] Total bills: 250
+[I 260126 14:31:08 hlap_cnvrt:67] Printed: 237
+[I 260126 14:31:08 hlap_cnvrt:68] Not printed: 13
+[I 260126 14:31:09 hlap_cnvrt:65] Created "fxd hlap Jan 25 CYCLE 2_PDF.TXT"
+[I 260126 14:31:09 hlap_cnvrt:66] Total bills: 250
+[I 260126 14:31:09 hlap_cnvrt:67] Printed: 250
+[I 260126 14:31:09 hlap_cnvrt:68] Not printed: 0
+[I 260126 14:35:29 test_hlap:19] Calling: py src/transforms/hlap_cnvrt.py -f "hlap Jan 25 CYCLE 2.TXT"
+[I 260126 14:35:29 hlap_cnvrt:65] Created "fxd hlap Jan 25 CYCLE 2_PRN.TXT"
+[I 260126 14:35:29 hlap_cnvrt:66] Total bills: 250
+[I 260126 14:35:29 hlap_cnvrt:67] Printed: 237
+[I 260126 14:35:29 hlap_cnvrt:68] Not printed: 13
+[I 260126 14:35:29 hlap_cnvrt:65] Created "fxd hlap Jan 25 CYCLE 2_PDF.TXT"
+[I 260126 14:35:29 hlap_cnvrt:66] Total bills: 250
+[I 260126 14:35:29 hlap_cnvrt:67] Printed: 250
+[I 260126 14:35:29 hlap_cnvrt:68] Not printed: 0
+[I 260126 14:37:08 test_hlap:19] Calling: py src/transforms/hlap_cnvrt.py -f "hlap Jan 25 CYCLE 2.TXT"
+[I 260126 14:37:08 hlap_cnvrt:65] Created "fxd hlap Jan 25 CYCLE 2_PRN.TXT"
+[I 260126 14:37:08 hlap_cnvrt:66] Total bills: 250
+[I 260126 14:37:08 hlap_cnvrt:67] Printed: 237
+[I 260126 14:37:08 hlap_cnvrt:68] Not printed: 13
+[I 260126 14:37:09 hlap_cnvrt:65] Created "fxd hlap Jan 25 CYCLE 2_PDF.TXT"
+[I 260126 14:37:09 hlap_cnvrt:66] Total bills: 250
+[I 260126 14:37:09 hlap_cnvrt:67] Printed: 250
+[I 260126 14:37:09 hlap_cnvrt:68] Not printed: 0
+[I 260126 14:38:37 test_hlap:19] Calling: py src/transforms/hlap_cnvrt.py -f "hlap Jan 25 CYCLE 2.TXT"
+[I 260126 14:38:37 hlap_cnvrt:65] Created "fxd hlap Jan 25 CYCLE 2_PRN.TXT"
+[I 260126 14:38:37 hlap_cnvrt:66] Total bills: 250
+[I 260126 14:38:37 hlap_cnvrt:67] Printed: 237
+[I 260126 14:38:37 hlap_cnvrt:68] Not printed: 13
+[I 260126 14:38:37 hlap_cnvrt:65] Created "fxd hlap Jan 25 CYCLE 2_PDF.TXT"
+[I 260126 14:38:37 hlap_cnvrt:66] Total bills: 250
+[I 260126 14:38:37 hlap_cnvrt:67] Printed: 250
+[I 260126 14:38:37 hlap_cnvrt:68] Not printed: 0
