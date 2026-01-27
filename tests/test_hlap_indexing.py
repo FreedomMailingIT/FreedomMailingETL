@@ -14,6 +14,7 @@ DATA = utils.FILE_PATH
 FNAME = '_hlap Aug 2023 cycle 2.pdf'
 NEW_FILE = FNAME[1:]
 copyfile(f'{DATA}/archive/{FNAME}', f'{DATA}{NEW_FILE}')
+utils.initialize_log_file(path=utils.FILE_PATH)  # FILE_PATH needed because utilities uses it
 
 
 def test_hlap_idx(fname=NEW_FILE):
