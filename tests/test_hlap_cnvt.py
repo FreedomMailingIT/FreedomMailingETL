@@ -11,6 +11,7 @@ DATA = utils.FILE_PATH
 FNAME = '_hlap Jan 25 CYCLE 2.TXT'
 NEW_FILE = FNAME[1:]
 copyfile(f'{DATA}/archive/{FNAME}', f'{DATA}{NEW_FILE}')
+utils.initialize_log_file(path=utils.FILE_PATH)  # FILE_PATH needed because utilities uses it
 
 
 def test_hlap_cnvt(fname=NEW_FILE):
