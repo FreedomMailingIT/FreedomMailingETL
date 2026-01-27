@@ -3,7 +3,7 @@
 
 import os
 from shutil import copyfile
-import src.app_modules.utilities as utils
+import app_modules.utilities as utils
 
 
 # Prepare for testing
