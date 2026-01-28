@@ -6,12 +6,15 @@ Should test all transforms because they are all unique.
 
 
 import os
+from shutil import copyfile
+
 import pytest
+
 import app_modules.utilities as utils
 import app_modules.file_locations as loctns
 
 # Prepare for testing
-TEST_DATA = f'{loctns.TEST_DATA}transform_data/'
+TEST_DATA = f'{loctns.TEST_DATA}'
 utils.initialize_log_file(path=utils.FILE_PATH)  # FILE_PATH needed because utilities uses it
 transforms = [
     'Charlevoix csv_EOR.zip',
@@ -35,7 +38,8 @@ transforms = [
 def test_transform(fname, subtests):
     """Test transform."""
     with subtests.test(msg=f'{fname} failed to execute!'):
-        assert os.system(f'py src/transforms/transform_file.py -f "{fname}" -p "{TEST_DATA}') == 0
+        copyfile(f'{TEST_DATA}/transform_data/{fname}', f'{TEST_DATA}{fname}')
+        assert os.system(f'py src/transforms/transform_file.py -f "{fname}"') == 0
 
     seg_len, lines = utils.trim_log_seg(utils.get_last_log_segment())
 
@@ -53,7 +57,8 @@ def test_transform(fname, subtests):
 
 
 def test_cleanup():
-    """Archive results to keep test TEST_DATA directory clean."""
+    """Keep test TEST_DATA directory clean."""
+    # archive fixed files for examining results, if needed
     if old_files := [x for x in os.listdir(TEST_DATA) if x.startswith('fxd ')]:
         utils.logger.debug('*' * 80)
         utils.logger.debug('Files to be archived: %s', old_files)
@@ -62,8 +67,17 @@ def test_cleanup():
             path_to_archive=utils.FILE_PATH,
             path_to_files=TEST_DATA,
             arch_name='transformed_files')
+    # remove copied source files
+    deletions = []
+    for file in transforms:
+        try:
+            os.remove(f'{TEST_DATA}{file}')
+            deletions.append(file)
+        except FileNotFoundError:
+            pass
+    utils.logger.info('Deleted test files: %s', deletions)
 
 
 if __name__ == '__main__':
-    os.system(f'py src/transforms/transform_file.py -f "{TEST_DATA}waterford.zip"')
+    os.system('py src/transforms/transform_file.py -f "waterford.zip" ')
     test_cleanup()
