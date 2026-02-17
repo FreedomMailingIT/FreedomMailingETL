@@ -258,4 +258,5 @@ if __name__ == '__main__':
         utils.logger.info('File "%s" not found.', ABS_FILENAME)
     else:
         RESULT = main(ABS_FILENAME, CITY_NAME)
+    utils.logger.info('*' * 80)
     sys.exit(RESULT)

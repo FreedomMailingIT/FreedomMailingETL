@@ -45,18 +45,14 @@ def dispatch_file(filename: str):
         if cname == 'hlap':
             program = ('src/pdf_bill_indexing/hlap_pdf_idx'
                         if ftype == 'pdf'
-                        else 'transforms/hlap_cnvrt')
+                        else 'src/transforms/hlap_cnvrt')
         elif 'dupes' in fname.lower():
             program = 'src/dupes_sorting/sort_multiples'
         else:  # try processing as specialized transform
             program = 'src/transforms/transform_file'
-        prob = os.system(f'\
-            py {program}.py \
-            -n {cname} \
-            -t {ftype} \
-            -f "{fname}" \
-            -p "{WATCH_ME}"\
-            ')
+        command = f'py {program}.py -n {cname} -t {ftype} -f "{fname}" -p "{WATCH_ME}"'
+        utils.logger.info('Invoking: %s', command)
+        prob = os.system(command)
     else:
         # rename file for easier processing later
         time.sleep(5)  # give time to release file
