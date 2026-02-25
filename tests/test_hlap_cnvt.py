@@ -31,8 +31,8 @@ def test_hlap_cnvt_log():
 def test_cleanup():
     """Remove results to keep test data directory clean."""
     test_files = [
-        p for p in DATA.iterdir()
-        if p.name.startswith('fxd') and not p.name.endswith('.zip')
+        x for x in DATA.iterdir()
+        if x.name.startswith('fxd') and not x.name.endswith('.zip')
     ]
     for test_file in test_files:
         test_file.unlink(missing_ok=True)

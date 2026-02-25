@@ -1,7 +1,8 @@
 """Test Heber Light & Power's indexing programs."""
 
 
-import os
+from pathlib import Path
+import subprocess
 from shutil import copyfile
 import app_modules.utilities as utils
 
@@ -10,17 +11,16 @@ DATA = utils.FILE_PATH
 
 
 # Prepare for testing
-DATA = utils.FILE_PATH
-FNAME = '_hlap Aug 2023 cycle 2.pdf'
-NEW_FILE = FNAME[1:]
-copyfile(f'{DATA}/archive/{FNAME}', f'{DATA}{NEW_FILE}')
+DATA = Path(utils.FILE_PATH)
+FNAME = 'hlap Aug 2023 cycle 2.pdf'
+copyfile(DATA / 'archive' / FNAME, DATA / FNAME)
 utils.initialize_log_file(path=utils.FILE_PATH)  # FILE_PATH needed because utilities uses it
 
 
-def test_hlap_idx(fname=NEW_FILE):
+def test_hlap_idx(fname=FNAME):
     """Test PDF indexing program."""
-    command = f'py src/pdf_bill_indexing/hlap_pdf_idx.py -f "{fname}"'
-    assert os.system(command) == 0
+    command = ['py', 'src/pdf_bill_indexing/hlap_pdf_idx.py', '-f', fname]
+    subprocess.run(command, check=True)
 
 
 def test_hlap_idx_log():
@@ -31,11 +31,9 @@ def test_hlap_idx_log():
 
 def test_cleanup():
     """Remove results to keep test data directory clean."""
-    if test_files := [
-            x for x in os.listdir(DATA)
-            if x.startswith('B47001')]:
-        for test_file in test_files:
-            os.remove(f'{DATA}{test_file}')
+    for test_file in [x for x in DATA.iterdir() if x.name.startswith('B47001')]:
+        test_file.unlink(missing_ok=True)
+    (DATA / FNAME).unlink(missing_ok=True)
 
 
 if __name__ == '__main__':
