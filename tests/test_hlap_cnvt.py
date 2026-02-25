@@ -1,39 +1,42 @@
-"""Test Heber Light & Power's convert of their RAW text to FM TSV."""
+"""Test Heber Light & Power's convert of their RAW text to FM TSV.
 
+Refactored 2026-02-25 after deprecation warning of os.system() reported.
+"""
 
-import os
+from pathlib import Path
+import subprocess
 from shutil import copyfile
 import app_modules.utilities as utils
 
 
 # Prepare for testing
-DATA = utils.FILE_PATH
-FNAME = '_hlap Jan 25 CYCLE 2.TXT'
-NEW_FILE = FNAME[1:]
-copyfile(f'{DATA}/archive/{FNAME}', f'{DATA}{NEW_FILE}')
-utils.initialize_log_file(path=utils.FILE_PATH)  # FILE_PATH needed because utilities uses it
+DATA = Path(utils.FILE_PATH)
+FNAME = 'hlap Jan 25 CYCLE 2.TXT'
+copyfile(DATA / 'archive' / FNAME, DATA / FNAME)
+utils.initialize_log_file(path=utils.FILE_PATH)  # utilities expects a string path
 
 
-def test_hlap_cnvt(fname=NEW_FILE):
+def test_hlap_cnvt(fname=FNAME):
     """Test conversion program."""
-    command = f'py src/transforms/hlap_cnvrt.py -f "{fname}"'
-    assert os.system(command) == 0
+    command = ['py', 'src/transforms/hlap_cnvrt.py', '-f', fname]
+    subprocess.run(command, check=True)
 
 
 def test_hlap_cnvt_log():
-    """Intergate log to see if conversion was successful."""
+    """Interrogate log to see if conversion was successful."""
     lines = utils.get_last_log_segment()
     assert 'Printed: 250' in lines[-2]
 
 
 def test_cleanup():
     """Remove results to keep test data directory clean."""
-    if test_files := [
-            x for x in os.listdir(DATA)
-            if x.startswith('fxd') and not x.endswith('.zip')]:
-        for test_file in test_files:
-            os.remove(f'{DATA}{test_file}')
-    os.remove(f'{DATA}{NEW_FILE}')
+    test_files = [
+        p for p in DATA.iterdir()
+        if p.name.startswith('fxd') and not p.name.endswith('.zip')
+    ]
+    for test_file in test_files:
+        test_file.unlink(missing_ok=True)
+    (DATA / FNAME).unlink(missing_ok=True)
 
 
 if __name__ == '__main__':
