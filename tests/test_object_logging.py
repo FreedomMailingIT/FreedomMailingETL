@@ -5,7 +5,7 @@ import pytest
 import app_modules.utilities as utils
 
 
-LM_TYPE = [
+LM_TYPES = [
     'DEBUG',
     'INFO',
     'WARNING',
@@ -17,7 +17,7 @@ LM_TYPE = [
 utils.initialize_log_file(path=utils.FILE_PATH)
 
 
-@pytest.mark.parametrize('lm_type', LM_TYPE)
+@pytest.mark.parametrize('lm_type', LM_TYPES)
 def test_logging_messages(lm_type: str) -> None:
     """Test message sent to logger."""
     msg = f'This is a {lm_type} message.'
