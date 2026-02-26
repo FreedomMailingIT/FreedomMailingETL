@@ -7,6 +7,7 @@ Taken from the Account class in hlp_account.py
 
 from dataclasses import dataclass
 import json
+from pathlib import Path
 
 
 @dataclass
@@ -40,10 +41,9 @@ def get_valid_periods(self):
 
 
 if __name__ == "__main__":
-    test_data = json.load(open('data/valid_periods.json', 'r', encoding='utf8'))
-    COUNT = 1
-    for date, expected in test_data.items():
-        # print(date, expected, get_valid_periods(Self(date)), sep='\n')
-        assert get_valid_periods(Self(date)) == expected
-        print(f'Passed test {COUNT} for {date}')
-        COUNT += 1
+    test_file = Path("data/archive/valid_periods.json")
+    with open(test_file , 'r', encoding='utf8') as jfile:
+        test_data = json.load(jfile)
+        for idx, (date, expected) in enumerate(test_data.items()):
+            assert get_valid_periods(Self(date)) == expected
+            print(f'Passed test {idx+1} for {date}')
