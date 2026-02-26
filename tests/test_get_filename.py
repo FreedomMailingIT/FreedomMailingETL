@@ -2,7 +2,6 @@
 
 
 import app_modules.utilities as utils
-import app_modules.file_locations as loctns
 
 
 TEST_DATA = 'tests/data/'  # loctns.TEST_DATA
@@ -38,12 +37,12 @@ def test_get_filename_partial_name_only():
 
 
 def test_get_filename_type_only():
-    """Test to make function finds right file."""
+    """Test to make function finds the most recent file."""
     fn = utils.get_filename(
         file_type='zip',
         file_path=f'{TEST_DATA}transform_data/'
         )
-    assert fn == 'waterford.zip'
+    assert fn == 'discovery_bay.zip'
 
 
 def test_get_filename_not_exist():
