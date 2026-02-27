@@ -1,12 +1,11 @@
 """Test transform programs.
 
 Should test all transforms because they are all unique.
-
 """
 
-
-import os
+from pathlib import Path
 from shutil import copyfile
+import subprocess
 
 import pytest
 
@@ -14,8 +13,9 @@ import app_modules.utilities as utils
 import app_modules.file_locations as loctns
 
 # Prepare for testing
-TEST_DATA = f'{loctns.TEST_DATA}'
-utils.initialize_log_file(path=utils.FILE_PATH)  # FILE_PATH needed because utilities uses it
+TEST_DATA = Path(loctns.TEST_DATA)
+utils.initialize_log_file(path=utils.FILE_PATH)
+
 transforms = [
     'Charlevoix csv_EOR.zip',
     'Charlevoix tsv_EOR.zip',
@@ -33,14 +33,23 @@ transforms = [
     'roosevelt.zip',
     'waterford.zip',
     'discovery_bay.zip'
-    ]
+]
 
 @pytest.mark.parametrize('fname', transforms)
 def test_transform(fname, subtests):
     """Test transform."""
     with subtests.test(msg=f'{fname} failed to execute!'):
-        copyfile(f'{TEST_DATA}/transform_data/{fname}', f'{TEST_DATA}{fname}')
-        assert os.system(f'py src/transforms/transform_file.py -f "{fname}"') == 0
+        src = TEST_DATA / "transform_data" / fname
+        dst = TEST_DATA / fname
+        copyfile(src, dst)
+
+        result = subprocess.run(
+            ["py", "src/transforms/transform_file.py", "-f", fname],
+            capture_output=True,
+            text=True,
+            check=True,
+        )
+        assert result.returncode == 0
 
     seg_len, lines = utils.trim_log_seg(utils.get_last_log_segment())
 
@@ -60,25 +69,28 @@ def test_transform(fname, subtests):
 def test_cleanup():
     """Keep test TEST_DATA directory clean."""
     # archive fixed files for examining results, if needed
-    if old_files := [x for x in os.listdir(TEST_DATA) if x.startswith('fxd ')]:
+    old_files = [x for x in TEST_DATA.iterdir() if x.name.startswith('fxd ')]
+    if old_files:
         utils.logger.debug('*' * 80)
         utils.logger.debug('Files to be archived: %s', old_files)
         utils.archive_files(
-            files=old_files,
+            files=[f.name for f in old_files],
             path_to_archive=utils.FILE_PATH,
-            path_to_files=TEST_DATA,
-            arch_name='transformed_files')
+            path_to_files=str(TEST_DATA) + '/',
+            arch_name='transformed_files'
+        )
+
     # remove copied source files
     deletions = []
     for file in transforms:
-        try:
-            os.remove(f'{TEST_DATA}{file}')
+        path = TEST_DATA / file
+        if path.exists():
+            path.unlink()
             deletions.append(file)
-        except FileNotFoundError:
-            pass
+
     utils.logger.info('Deleted test files: %s', deletions)
 
 
 if __name__ == '__main__':
-    os.system('py src/transforms/transform_file.py -f "waterford.zip" ')
+    subprocess.run(["py", "src/transforms/transform_file.py", "-f", "waterford.zip"], check=True)
     test_cleanup()
