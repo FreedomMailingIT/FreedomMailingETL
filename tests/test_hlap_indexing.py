@@ -7,13 +7,10 @@ from shutil import copyfile
 import app_modules.utilities as utils
 
 
-DATA = utils.FILE_PATH
-
-
 # Prepare for testing
-DATA = Path(utils.FILE_PATH)
+TEST_DATA = Path(utils.FILE_PATH)
 FNAME = 'hlap Aug 2023 cycle 2.pdf'
-copyfile(DATA / 'archive' / FNAME, DATA / FNAME)
+copyfile(TEST_DATA / 'archive' / FNAME, TEST_DATA / FNAME)
 utils.initialize_log_file(path=utils.FILE_PATH)  # FILE_PATH needed because utilities uses it
 
 
@@ -30,10 +27,17 @@ def test_hlap_idx_log():
 
 
 def test_cleanup():
-    """Remove results to keep test data directory clean."""
-    for test_file in [x for x in DATA.iterdir() if x.name.startswith('B47001')]:
-        test_file.unlink(missing_ok=True)
-    (DATA / FNAME).unlink(missing_ok=True)
+    """Archive results to keep test data directory clean."""
+    old_files = [x.name for x in TEST_DATA.iterdir() if x.name.startswith('B47001')]
+    if old_files:
+        utils.logger.debug('*' * 80)
+        utils.logger.debug('Files to be archived: %s', old_files)
+        utils.archive_files(
+            files=old_files,
+            path_to_archive=utils.FILE_PATH,
+            path_to_files=str(TEST_DATA) + '/',
+            arch_name='hlap_data'
+        )
 
 
 if __name__ == '__main__':
