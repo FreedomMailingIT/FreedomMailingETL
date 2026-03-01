@@ -200,7 +200,8 @@ def sort_and_output(groups, filename, due_date_col, delim, blank_lines):
                 tracker.line_no, due_date = write_record(
                     due_date_col, out_file, line, tracker.line_no)
     print_success_msg(
-        (filename, due_date_col, due_date, tracker.first_banner, blank_lines, tracker.line_no, sorted_fn)
+        (filename, due_date_col, due_date, tracker.first_banner,
+         blank_lines, tracker.line_no, sorted_fn)
         )
 
 
