@@ -30,7 +30,7 @@ def build_consumption_history(bill):
 
 
 def calc_period_days(bill, start_date, end_date):
-    """Calculate the number of days in the building period."""
+    """Calculate the number of days in the billing period."""
     d1 = datetime.strptime(start_date, "%m/%d/%Y").date()
     d2 = datetime.strptime(end_date, "%m/%d/%Y").date()
     bill['numb_days'] = (d2 - d1).days
