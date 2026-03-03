@@ -14,10 +14,10 @@ months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
 CONS_KEY = 'Cons_hist'
 
 
-class SourceXML:
+class SourceXML:  # pylint: disable=R0902:too-many-instance-attributes
     """Handle reading source XML."""
 
-    def __init__(  # pylint: disable=too-many-arguments
+    def __init__(  # pylint: disable=R0917:too-many-positional-arguments,R0913:too-many-arguments
                 self,
                 source_text,
                 xml_extract,  # fields to be extracted
