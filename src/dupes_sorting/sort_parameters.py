@@ -59,6 +59,7 @@ ORGS = {
     'marinette': ['H', 'C', 'E', 'K'],
     'marinett': ['H', 'C', 'E', 'K'],
     'marriott': ['P', 'M', 'K', 'A'],  # also bona, farr, harrisville & plain
+    'northwest': ['G', 'C', 'B', 'M'],
     'oak': ['M', 'J', 'H', 'A'],
     'pagosa': ['N', 'K', 'J', 'A'],
     'parowan': ['L', 'I', 'G', 'A'],
