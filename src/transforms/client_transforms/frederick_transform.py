@@ -13,18 +13,6 @@ def add_global_messages(bill, source):
     return bill
 
 
-def strip_leading_zeros(name, value):
-    """Strip zeros, except on account number (needed for bills & notices)."""
-    return value.lstrip('0') if name in ff.currency_fields else value
-
-
-def extract_notice(notice):
-    """Extract late pay file data."""
-    for name, value in notice.items():
-        notice[name] = strip_leading_zeros(name, value)
-    return notice
-
-
 def build_consumption_history(bill):
     """Build consumption columns from extracted data."""
     start_per = 12 - int(bill['Cons_prd'].split('/')[0])
@@ -45,34 +33,19 @@ def correct_meter_types(bill):
     return bill
 
 
+def extract_notice(notice):
+    """Extract late pay file data."""
+    for name, value in notice.items():
+        notice[name] = strip_leading_zeros(name, value)
+    return notice
+
+
 def format_currency(bill, name, value):
     """Format extracted data into suitable currency field."""
     value = value.replace('-', 'CR').lstrip('0')
     value = ('0.00' if value == '.00'
              else (f'0{value}' if value[0] == '.' else value))
     bill[name] = value
-
-
-def set_direct_pay(bill):
-    """Set Direct Pay CSV column."""
-    msg = ff.direct_pay['message'].replace(
-        '{draft_date}', bill[ff.direct_pay['pay_date']])
-    bill[ff.direct_pay['msg_col']] = msg
-    return bill
-
-
-def set_contract_pay(bill):
-    """Set Contract Pay message (if ever needed)."""
-    return bill
-
-
-def unpack_list_values(bill, name, values):
-    """Unpack returned list into appropriate CSV columns."""
-    for idx, item in enumerate(values):
-        new_key = name.replace('?', str(idx+1))
-        new_key = f'curr{new_key}' if new_key == 'usage1' else new_key
-        bill[new_key] = item.lstrip('0')
-    return bill
 
 
 def format_data(bill):
@@ -96,6 +69,35 @@ def format_data(bill):
             strip_leading_zeros(name, value)
     return new_bill
 
+
+def set_direct_pay(bill):
+    """Set Direct Pay CSV column."""
+    msg = ff.direct_pay['message'].replace(
+        '{draft_date}', bill[ff.direct_pay['pay_date']])
+    bill[ff.direct_pay['msg_col']] = msg
+    return bill
+
+
+def set_contract_pay(bill):
+    """Set Contract Pay message (if ever needed)."""
+    return bill
+
+
+def strip_leading_zeros(name, value):
+    """Strip zeros, except on account number (needed for bills & notices)."""
+    return value.lstrip('0') if name in ff.currency_fields else value
+
+
+def unpack_list_values(bill, name, values):
+    """Unpack returned list into appropriate CSV columns."""
+    for idx, item in enumerate(values):
+        new_key = name.replace('?', str(idx+1))
+        new_key = f'curr{new_key}' if new_key == 'usage1' else new_key
+        bill[new_key] = item.lstrip('0')
+    return bill
+
+
+############## main function ################
 
 def transform_data(csv_w, source_text):
     """Convert Frederick source XML into required format."""

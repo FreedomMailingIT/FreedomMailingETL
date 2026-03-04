@@ -15,16 +15,6 @@ def add_global_messages(bill, source):
     return bill
 
 
-def strip_leading_zeros(name, value):
-    """Strip zeros, except on account number (needed for bills & notices)."""
-    return value.lstrip('0') if name in rf.currency_fields else value
-
-
-def strip_leading_numbers(value):
-    """Strip non-alpha characters at beginning of service name."""
-    return value[value.find('-')+1:].strip()
-
-
 def extract_notice(notice):
     """Extract late pay file data."""
     for name, value in notice.items():
@@ -71,6 +61,28 @@ def _format_currency(value):
     return value
 
 
+def format_data(bill):
+    """Format extracted XML data for output."""
+    bill = (build_consumption_history(bill)
+            if bill.get(ttx.CONS_KEY, False)
+            else bill)
+    bill = (set_direct_pay(bill)
+            if rf.DIR_PAY_MSG and bill.get('directpay', False) == 'Y'
+            else bill)
+    bill = set_contract_pay(bill) if bill.get('contrctamt', False) else bill
+    new_bill = {k: v for (k, v) in bill.items() if not k.endswith('?')}
+    new_bill |= rf.bill_literals
+    new_bill['baraccnum'] = new_bill['accnumber'].replace('-', '')
+    for name, value in bill.items():
+        if name in rf.currency_fields:
+            format_currency(new_bill, name, value)
+        elif isinstance(value, list):
+            unpack_list_values(new_bill, name, value)
+        else:
+            strip_leading_zeros(name, value)
+    return new_bill
+
+
 def _fix_neg(amount):
     return '-' + amount[:-1] if amount.endswith('-') else amount
 
@@ -99,6 +111,16 @@ def set_contract_pay(bill):
     return bill
 
 
+def strip_leading_numbers(value):
+    """Strip non-alpha characters at beginning of service name."""
+    return value[value.find('-')+1:].strip()
+
+
+def strip_leading_zeros(name, value):
+    """Strip zeros, except on account number (needed for bills & notices)."""
+    return value.lstrip('0') if name in rf.currency_fields else value
+
+
 def unpack_list_values(bill, name, values):
     """Unpack returned list into appropriate CSV columns."""
     for idx, item in enumerate(values):
@@ -113,27 +135,7 @@ def unpack_list_values(bill, name, values):
     return bill
 
 
-def format_data(bill):
-    """Format extracted XML data for output."""
-    bill = (build_consumption_history(bill)
-            if bill.get(ttx.CONS_KEY, False)
-            else bill)
-    bill = (set_direct_pay(bill)
-            if rf.DIR_PAY_MSG and bill.get('directpay', False) == 'Y'
-            else bill)
-    bill = set_contract_pay(bill) if bill.get('contrctamt', False) else bill
-    new_bill = {k: v for (k, v) in bill.items() if not k.endswith('?')}
-    new_bill |= rf.bill_literals
-    new_bill['baraccnum'] = new_bill['accnumber'].replace('-', '')
-    for name, value in bill.items():
-        if name in rf.currency_fields:
-            format_currency(new_bill, name, value)
-        elif isinstance(value, list):
-            unpack_list_values(new_bill, name, value)
-        else:
-            strip_leading_zeros(name, value)
-    return new_bill
-
+############## main function ################
 
 def transform_data(csv_w, source_text):
     """Convert Roosevelt source XML into required format."""

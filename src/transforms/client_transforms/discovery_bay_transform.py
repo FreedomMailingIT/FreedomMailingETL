@@ -20,6 +20,7 @@ def blank_unneeded_usages(bill):
         pass  # blank_usage not setup OR no services attached to account
     return bill
 
+
 def build_consumption_history(bill):
     """Build consumption columns from extracted data."""
     start_per = 12 - int(bill['Cons_prd'].split('/')[0])
