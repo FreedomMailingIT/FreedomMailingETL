@@ -12,14 +12,14 @@ class NestedZipPath:
     Suggested by CoPilot after long conversation.
     """
 
-    def __init__(self, outer_zip, inner_zip, inner_file, *, decode=True):
+    def __init__(self, outer_zip: Path, inner_zip: str, inner_file: str, *, decode: bool=True):
         self.outer_zip = Path(outer_zip)
         self.inner_zip = inner_zip
         self.inner_file = inner_file
         self.decode = decode
 
     def read(self):
-        """The at text file enclosed in a zip file which is enclosed in a zip file.
+        """The actual text file enclosed in a zip file which is enclosed in a zip file.
 
         Used mainly in testing to make sure recently modified file matches known correct file.
         """
