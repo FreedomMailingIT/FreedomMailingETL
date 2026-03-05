@@ -14,7 +14,7 @@ import subprocess
 import pytest
 
 import app_modules.file_locations as loctns
-import app_modules.file_compare as fc
+import app_modules.nested_zip_read as nzr
 import app_modules.utilities as utils
 
 # Prepare for testing
@@ -103,8 +103,8 @@ def test_file_compares():
     for file in [x for x in TEST_DATA.iterdir() if x.name.endswith('.zip')]:
         file_name = 'fxd ' + file.name
         utils.logger.info('Comparing created "%s" with stored file', file.name)
-        assert fc.NestedZipPath(archive_zip, file_name, file_name.replace('.zip','.csv')) == \
-               fc.NestedZipPath(compare_zip, file_name, file_name.replace('.zip','.csv'))
+        assert nzr.NestedZipPath(archive_zip, file_name, file_name.replace('.zip','.csv')) == \
+               nzr.NestedZipPath(compare_zip, file_name, file_name.replace('.zip','.csv'))
 
 
 def test_delete_workfiles():
