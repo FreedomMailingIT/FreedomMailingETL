@@ -31,13 +31,14 @@ transforms = [
     'effingham bills.zip',
     'effingham delinquents.zip',
     'elko.zip',
+    'lake_point.zip',
+    'waterford.zip',
+    #TylerTech testing
+    'discovery_bay.zip',
     'frederick water.zip',
     'frederick non water.zip',
     'frederick shutoffs.zip',
-    'lake_point.zip',
     'roosevelt.zip',
-    'waterford.zip',
-    'discovery_bay.zip'
 ]
 
 @pytest.mark.parametrize('fname', transforms)
