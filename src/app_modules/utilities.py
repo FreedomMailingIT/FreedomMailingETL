@@ -12,7 +12,7 @@ from pathlib import Path
 
 import chardet
 import app_modules.file_locations as loctns
-from app_modules.app_logger import logger  #pylint: disable=W0611:unused-import
+from app_modules.app_logger import logger  #noqa F401, pylint: disable=W0611:unused-import
 
 DATA_ROOT = loctns.DATA_ROOT
 FILE_PATH = loctns.FILE_PATH
