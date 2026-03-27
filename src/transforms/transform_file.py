@@ -46,7 +46,7 @@ def process_files(in_zip, out_zip, custom, file_path):
         source_text = byte_stream.read().decode(file_encoding).split('\r\n')
         # make sure new filename has csv extension
         zipped_result_filename = f'{Path(zipped_filename).stem}'
-        mod_filename = f'{zipped_result_filename}.csv'.lower()
+        mod_filename = f'fxd {zipped_result_filename}.csv'.lower()
         tmp_workfile_name = f'{file_path}{mod_filename}'
         fh_tmp_file = open(tmp_workfile_name, 'w', encoding=file_encoding)
 
