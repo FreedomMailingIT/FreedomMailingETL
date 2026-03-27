@@ -51,7 +51,7 @@ def archive_files(
     with zipfile.ZipFile(arch_name, mode) as zip_file:
         for filename in files:
             target_file = f'{path_to_files}{filename}'
-            logger.debug('%s -> %s', target_file, filename)
+            logger.debug('Archiving: %s -> %s', target_file, filename)
             zip_file.write(
                 target_file, filename,
                 compress_type=zipfile.ZIP_DEFLATED)
