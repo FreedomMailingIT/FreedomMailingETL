@@ -104,6 +104,7 @@ def test_file_compares():
     archive_zip = Path(TEST_DATA) / 'archive' /  'transformed_files.zip'
     compare_zip = Path(TEST_DATA) / 'compares' / 'transform_compares.zip'
 
+    utils.logger.info('Checking converted archived files match "compares" files.')
     archived = nzr.nested_csv_dict(nzr.NestedZipArchive(archive_zip))
     compares = nzr.nested_csv_dict(nzr.NestedZipArchive(compare_zip))
     assert archived == compares  # dict equality true even with different key/val order
