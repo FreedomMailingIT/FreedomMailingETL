@@ -96,13 +96,17 @@ def test_cleanup():
 
 
 def test_file_compares():
-    """Do file compares AFTER the have been archived"""
+    """
+    Do file compares AFTER conversions have been archived.
+
+    Handles multiple CSV files within inner zip (eg elko).
+    """
     archive_zip = Path(TEST_DATA) / 'archive' /  'transformed_files.zip'
     compare_zip = Path(TEST_DATA) / 'compares' / 'transform_compares.zip'
 
     archived = nzr.nested_csv_dict(nzr.NestedZipArchive(archive_zip))
     compares = nzr.nested_csv_dict(nzr.NestedZipArchive(compare_zip))
-    assert archived == compares  # dict equality true even with different orders
+    assert archived == compares  # dict equality true even with different key/val order
 
 
 def test_delete_workfiles():
