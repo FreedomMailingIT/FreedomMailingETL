@@ -1,4 +1,8 @@
-"""Class to compare zipped, zipped files for equality."""
+"""
+Class to compare zipped, zipped files for equality.
+
+Suggested by CoPilot after long discussion.
+"""
 
 
 from zipfile import ZipFile
@@ -6,33 +10,63 @@ from io import BytesIO
 from pathlib import Path
 
 
-class NestedZipPath:
-    """Represents a file inside a ZIP that is itself inside another ZIP.
+class InnerZip:
+    """Represents a single inner ZIP inside an outer ZIP."""
+    def __init__(self, outer_zip_path, inner_zip_name):
+        self.outer_zip_path = Path(outer_zip_path)
+        self.inner_zip_name = inner_zip_name
 
-    Suggested by CoPilot after long conversation.
-    """
+    def _open(self):
+        """Open the inner ZIP as an in-memory ZipFile."""
+        with ZipFile(self.outer_zip_path) as outer:
+            inner_bytes = outer.read(self.inner_zip_name)
+        return ZipFile(BytesIO(inner_bytes))
 
-    def __init__(self, outer_zip: Path, inner_zip: str, inner_file: str, *, decode: bool=True):
-        self.outer_zip = Path(outer_zip)
-        self.inner_zip = inner_zip
-        self.inner_file = inner_file
-        self.decode = decode
+    def list_files(self):
+        """Return all file names inside this inner ZIP."""
+        with self._open() as inner:
+            return inner.namelist()
 
-    def read(self):
-        """The actual text file enclosed in a zip file which is enclosed in a zip file.
-
-        Used mainly in testing to make sure recently modified file matches known correct file.
-        """
-        with ZipFile(self.outer_zip) as outer:
-            inner_bytes = outer.read(self.inner_zip)
-            with ZipFile(BytesIO(inner_bytes)) as inner:
-                data = inner.read(self.inner_file)
-                return data.decode() if self.decode else data
-
-    def __eq__(self, other):
-        if not isinstance(other, NestedZipPath):
-            return NotImplemented
-        return self.read() == other.read()
+    def iter_csvs(self, *, decode=False):
+        """Yield (csv_name, csv_bytes_or_text) for each CSV inside this inner ZIP."""
+        with self._open() as inner:
+            for name in inner.namelist():
+                if name.lower().endswith(".csv"):
+                    data = inner.read(name)
+                    yield name, (data.decode() if decode else data)
 
     def __repr__(self):
-        return f"NestedZipPath({self.outer_zip!r}, {self.inner_zip!r}, {self.inner_file!r})"
+        return f"InnerZip({self.inner_zip_name!r})"
+
+
+class NestedZipArchive:
+    """Represents an outer ZIP containing multiple inner ZIPs."""
+    def __init__(self, outer_zip_path):
+        self.outer_zip_path = Path(outer_zip_path)
+
+    def iter_inner_zips(self):
+        """Yield InnerZip objects for each ZIP stored inside the outer ZIP."""
+        with ZipFile(self.outer_zip_path) as outer:
+            for name in outer.namelist():
+                if name.lower().endswith(".zip"):
+                    yield InnerZip(self.outer_zip_path, name)
+
+    def iter_all_csvs(self, *, decode=False):
+        """
+        Yield (inner_zip_name, csv_name, csv_bytes_or_text)
+        for every CSV inside every inner ZIP.
+        """
+        for inner in self.iter_inner_zips():
+            for csv_name, data in inner.iter_csvs(decode=decode):
+                yield inner.inner_zip_name, csv_name, data
+
+    def __repr__(self):
+        return f"NestedZipArchive({self.outer_zip_path!r})"
+
+
+def nested_csv_dict(archive):
+    """Return dict of all CSV file data in zip file."""
+    return {
+        (inner_zip, csv_name): data
+        for inner_zip, csv_name, data in archive.iter_all_csvs()
+    }

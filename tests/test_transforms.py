@@ -99,11 +99,10 @@ def test_file_compares():
     """Do file compares AFTER the have been archived"""
     archive_zip = Path(TEST_DATA) / 'archive' /  'transformed_files.zip'
     compare_zip = Path(TEST_DATA) / 'compares' / 'transform_compares.zip'
-    for file in [x for x in TEST_DATA.iterdir() if x.name.endswith('.zip')]:
-        file_name = 'fxd ' + file.name
-        utils.logger.info('Comparing created "%s" with stored compare file', file.name)
-        assert nzr.NestedZipPath(archive_zip, file_name, file_name.replace('.zip','.csv')) == \
-               nzr.NestedZipPath(compare_zip, file_name, file_name.replace('.zip','.csv'))
+
+    archived = nzr.nested_csv_dict(nzr.NestedZipArchive(archive_zip))
+    compares = nzr.nested_csv_dict(nzr.NestedZipArchive(compare_zip))
+    assert archived == compares  # dict equality true even with different orders
 
 
 def test_delete_workfiles():
